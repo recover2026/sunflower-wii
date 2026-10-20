@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>向阳社 · 天气指数保险设计平台</title>
+<meta name="description" content="懂农业种植、懂气象数据：需求反推保险方案、方案测算保险费率">
+<link rel="stylesheet" href="assets/css/app.css">
+<!-- 访问门禁（须最先加载，登录前挡住页面） -->
+<script src="assets/js/gate.js"></script>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <img class="brand-mark" src="assets/img/sunflower-logo.png" alt="向阳社">
+    <div class="brand-txt">
+      <div class="bn">向阳<em>社</em><span class="bn-sub"> · 天气指数保险设计平台</span></div>
+      <div class="bs">Agri WII Design Studio · 懂种植 · 懂气象</div>
+    </div>
+  </div>
+  <nav class="tabs">
+    <div class="tab on" data-tab="overview"><span class="tb">总览</span></div>
+    <div class="tab" data-tab="market"><span class="tb">行业方案库</span><b>2024-2025</b></div>
+    <div class="tab" data-tab="reverse"><span class="tb">需求反推方案</span><b>引擎一</b></div>
+    <div class="tab" data-tab="scheme"><span class="tb">方案设计器</span><b>一键成案</b></div>
+    <div class="tab" data-tab="rate"><span class="tb">方案测算费率</span><b>引擎二</b></div>
+    <div class="tab" data-tab="scenario"><span class="tb">需求场景</span><b>工作台</b></div>
+    <div class="tab" data-tab="map"><span class="tb">选点地图</span><b>县级</b></div>
+    <div class="tab" data-tab="method"><span class="tb">设计方法论</span></div>
+  </nav>
+  <div class="top-right">
+    <span class="badge-ver">内部设计辅助</span>
+    <div class="clock"><span id="clock-date">—</span><b id="clock-time">—</b></div>
+    <button class="btn-exit" id="btn-exit" type="button">退出</button>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- ========== 总览 ========== -->
+  <section class="view on" id="v-overview">
+    <div class="hero">
+      <h1>把<em>多年气象</em>与<em>作物物候</em>，变成可落地的天气指数保险方案</h1>
+      <p>平台围绕两大核心能力构建：① 输入关键需求，反推指数类型、物候窗口、触发阈值与分段赔付函数；② 输入具体方案，调用真实历史气象回测终极赔付率(ULR)与 Bootstrap 费率区间。懂农业种植、懂气象数据，是设计辅助而非精算替代。</p>
+      <div class="hero-tags">
+        <span class="hero-tag">14 类作物物候 × 灾害耐受</span>
+        <span class="hero-tag">6 类气象指数模板</span>
+        <span class="hero-tag">6 类业务需求场景</span>
+        <span class="hero-tag">全国县级合规边界（DataV 秒开）</span>
+        <span class="hero-tag">一键方案设计器</span>
+        <span class="hero-tag">Open-Meteo 真实再分析气象</span>
+        <span class="hero-tag">Bootstrap 费率区间</span>
+        <span class="hero-tag">基差风险农时治理</span>
+      </div>
+    </div>
+
+    <div class="engine-wrap" style="margin-top:22px">
+      <div class="panel">
+        <h3>引擎一 · 需求反推方案</h3>
+        <div class="ph-sub">输入：作物 / 区域 / 灾害 / 保额与关键需求</div>
+        <div class="scroll-note">输出：推荐指数类型、关键物候窗口、触发阈值、分段赔付函数、经验费率区间、基差治理建议。一键送入引擎二测算真实费率。</div>
+        <div class="btn-row"><button class="btn primary" onclick="switchTab('reverse')">去反推方案 →</button></div>
+      </div>
+      <div class="panel">
+        <h3>引擎二 · 方案测算费率</h3>
+        <div class="ph-sub">输入：县区 / 保险期间 / 责任 / 触发阈值 / 分段赔付 / 保额</div>
+        <div class="scroll-note">输出：真实历史回测的期望年赔付率、纯费率 Bootstrap 区间、建议综合费率、ULR 与校准建议、逐年赔付率图。数据真实可溯源（非模拟）。</div>
+        <div class="btn-row"><button class="btn primary" onclick="switchTab('rate')">去测算费率 →</button></div>
+      </div>
+    </div>
+
+    <div class="home-map-card">
+      <div class="sec-h">业务区域选点地图（全国 · 合规边界）</div>
+      <div class="sec-sub">省 → 市 → 县 下钻选点，自动取县级质心填入费率引擎。边界数据：DataV.GeoAtlas（基于国家基础地理信息标准），不依赖外部瓦片底图，秒开稳定。</div>
+      <div class="map-wrap">
+        <div class="map-side">
+          <div class="field"><label>省</label><select id="hm-prov"><option>加载中…</option></select></div>
+          <div class="field"><label>市</label><select id="hm-city"><option>—</option></select></div>
+          <div class="field"><label>县 / 区</label><select id="hm-county"><option>—</option></select></div>
+          <div class="map-sel">已选：<b id="hm-sel">未选择</b></div>
+          <div class="map-coord">纬度 <span id="hm-lat">—</span> ｜ 经度 <span id="hm-lon">—</span></div>
+          <div class="btn-row" id="hm-action" style="display:none"><button class="btn primary" onclick="switchTab('rate')">前往引擎二测算 →</button></div>
+          <div class="scroll-note" id="home-map-status"></div>
+          <div class="scroll-note">点地图下钻/选县，或用左侧下拉。选县后点「前往引擎二」即可用真实气象回测费率。</div>
+        </div>
+        <div class="map-main">
+          <div class="map-toolbar"><button class="btn ghost sm" id="hm-back">返回上级</button></div>
+          <canvas id="homemap" class="map-canvas"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:18px">
+      <b>核心立场：</b>在真实气象数据接入前，任何"已验证 XX%"的说法都不成立。本平台产出的是"用真实历史数据实测得到的 ULR"与"校准方向"，而非编造的通过结论。所有阈值/费率以【】占位，待试点县历史数据标定 + 精算报备 + 监管批复。主体严格区分：阳光财产保险股份有限公司 ≠ 阳光农业相互保险公司。
+    </div>
+  </section>
+
+  <!-- ========== 行业方案库 ========== -->
+  <section class="view" id="v-market">
+    <div class="sec-h">市面天气指数保险设计方案库</div>
+    <div class="sec-sub">基于公开资料梳理（2024-2025 国内试点 + 印度 RWBCIS / 肯尼亚 / 墨西哥 等），用于对标与启发，非本公司产品承诺。</div>
+    <div class="market-filter" id="market-filter">
+      <label>范围 <select id="mf-scope">
+        <option value="">全部</option><option value="国内">国内试点/政策</option><option value="国际">国际</option><option value="方法论">方法论</option></select></label>
+      <label>关键词 <input id="mf-kw" type="text" placeholder="作物/灾害，如 水稻/连阴雨"></label>
+      <span class="mf-count" id="mf-count"></span>
+    </div>
+    <div class="market-grid" id="market-grid"></div>
+  </section>
+
+  <!-- ========== 引擎一：需求反推方案 ========== -->
+  <section class="view" id="v-reverse">
+    <div class="sec-h">引擎一 · 需求反推保险方案</div>
+    <div class="sec-sub">输入关键需求，反推可落地的天气指数保险方案（纯气象指数触发，遥感仅作校验/校准与佐证）。</div>
+    <div class="engine-wrap">
+      <div class="panel">
+        <h3>关键需求输入</h3>
+        <div class="ph-sub">越少信息也能反推；越具体反推越准</div>
+        <div class="field"><label>作物</label><select id="rv-crop"></select></div>
+        <div class="field"><label>区域气候带（选县自动匹配，亦可手选）</label><select id="rv-zone"></select></div>
+        <div class="field"><label>目标区域（省 → 市 → 县，细分到县）</label>
+          <div class="row3" style="margin-bottom:5px">
+            <select id="rv-prov"><option value="">省</option></select>
+            <select id="rv-city"><option value="">市</option></select>
+            <select id="rv-county"><option value="">县/区</option></select>
+          </div>
+          <div class="scroll-note" id="rv-geo-status" style="margin-top:4px">选县后自动匹配气候带，坐标自动送入引擎二取该县真实历史气象</div>
+        </div>
+        <div class="field"><label>主要灾害（可多选 · 组合设计）</label>
+          <div class="chips" id="rv-perils">
+            <label class="chip"><input type="checkbox" value="drought" checked>干旱/亏缺</label>
+            <label class="chip"><input type="checkbox" value="frost">低温霜冻</label>
+            <label class="chip"><input type="checkbox" value="heat">高温热害</label>
+            <label class="chip"><input type="checkbox" value="rainy">连阴雨渍涝</label>
+            <label class="chip"><input type="checkbox" value="storm">暴雨洪涝</label>
+            <label class="chip"><input type="checkbox" value="wind">大风倒伏</label>
+          </div>
+        </div>
+        <div class="field"><label>方案类型（理赔阈值形态）</label><select id="rv-paytype">
+          <option value="step">阶梯型理赔阈值（分档查表 · 市场主流）</option>
+          <option value="linear">线性理赔阈值（触发→退出线性折算 · RWBCIS式）</option></select></div>
+        <div class="field"><label>目标保额（元/亩）</label><input id="rv-sum" type="number" value="400" min="50" step="50"></div>
+        <div class="field"><label>期望费率上限（%，可选）</label><input id="rv-cap" type="number" value="" min="0" step="0.5" placeholder="如 6"></div>
+        <div class="field"><label>参保对象</label><select id="rv-insured">
+          <option>小农户</option><option>种植大户/家庭农场</option><option>合作社/新型经营主体</option><option>制种/龙头企业</option></select></div>
+        <div class="check"><input type="checkbox" id="rv-policy" checked><label for="rv-policy" style="margin:0">是否叠加政策性补贴框架</label></div>
+        <div class="btn-row" style="margin-top:14px"><button class="btn primary" id="rv-go">反推方案</button>
+          <button class="btn ghost" onclick="document.getElementById('reverse-out').style.display='none'">清空</button></div>
+      </div>
+      <div class="panel">
+        <h3>反推结果</h3>
+        <div class="ph-sub">方案默认阈值以【】占位，待历史气象标定</div>
+        <div id="reverse-out" style="display:none"></div>
+        <div id="reverse-empty" class="scroll-note">在左侧填写需求后点击「反推方案」。例如：水稻 + 长江中下游（可细分到县）+ 连阴雨（可多选灾害）+ 保额400 + 阶梯/线性，即可得到抽穗—灌浆窗口的连阴雨指数方案，附全生育期农事农时历与真实受灾机理。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 方案设计器 ========== -->
+  <section class="view" id="v-scheme">
+    <div class="sec-h">方案设计器 · 一键成案（反推 + 真实气象回测校准）</div>
+    <div class="sec-sub">输入县（选县自动取县级质心坐标，气象回测走 Open-Meteo 真实再分析，约 25km 网格）、作物、主害/次害、物候窗口、保额与承保面积，平台自动反推指数方案并用历史气象回测校准费率，产出一份可导出/打印的天气指数保险方案。</div>
+    <div class="rate-grid">
+      <div class="panel">
+        <h3>设计输入</h3>
+        <div class="field"><label>目标县（选县自动取质心坐标，在线回测）</label>
+          <select id="sd-county"><option value="">— 手动输入经纬度 —</option></select></div>
+        <div class="row2" style="margin-bottom:10px">
+          <div class="field" style="margin:0"><label>纬度(可覆盖)</label><input id="sd-lat" type="number" step="0.01" placeholder="如 29.47"></div>
+          <div class="field" style="margin:0"><label>经度(可覆盖)</label><input id="sd-lon" type="number" step="0.01" placeholder="如 119.28"></div>
+        </div>
+        <div class="field"><label>作物</label><select id="sd-crop"></select></div>
+        <div class="field"><label>主害风险</label><select id="sd-peril">
+          <option value="drought">干旱/降水亏缺</option><option value="frost">低温霜冻</option>
+          <option value="heat">高温热害</option><option value="rainy">连阴雨渍涝</option>
+          <option value="storm">暴雨洪涝</option><option value="wind">大风倒伏</option></select></div>
+        <div class="field"><label>次害风险（可选 · 多责合计）</label><select id="sd-peril2"></select></div>
+        <div class="row2" style="margin-bottom:10px">
+          <div class="field" style="margin:0"><label>窗口起(月/日)</label>
+            <div style="display:flex;gap:6px"><input id="sd-m1" type="number" value="7" min="1" max="12" style="width:46%"><input id="sd-d1" type="number" value="1" min="1" max="31" style="width:46%"></div></div>
+          <div class="field" style="margin:0"><label>窗口止(月/日)</label>
+            <div style="display:flex;gap:6px"><input id="sd-m2" type="number" value="10" min="1" max="12" style="width:46%"><input id="sd-d2" type="number" value="15" min="1" max="31" style="width:46%"></div></div>
+        </div>
+        <div class="field"><label>目标保额（元/亩）</label><input id="sd-sum" type="number" value="400" min="50" step="50"></div>
+        <div class="field"><label>承保面积（万亩，可选）</label><input id="sd-area" type="number" value="10" min="0" step="1"></div>
+        <div class="sec-sub" style="margin-top:12px">或直接在地图上选县（省 → 市 → 县 下钻，点地图/下拉均可，自动回填经纬度与试点县）</div>
+        <div class="map-wrap" style="margin-top:6px">
+          <div class="map-side">
+            <div class="field"><label>省</label><select id="sdm-prov"><option>加载中…</option></select></div>
+            <div class="field"><label>市</label><select id="sdm-city"><option>—</option></select></div>
+            <div class="field"><label>县 / 区</label><select id="sdm-county"><option>—</option></select></div>
+            <div class="map-sel">已选：<b id="sdm-sel">未选择</b></div>
+            <div class="map-coord">纬度 <span id="sdm-lat">—</span> ｜ 经度 <span id="sdm-lon">—</span></div>
+            <div class="scroll-note" id="sdm-status"></div>
+          </div>
+          <div class="map-main">
+            <div class="map-toolbar"><button class="btn ghost sm" id="sdm-back">返回上级</button></div>
+            <canvas id="sdm-canvas" class="map-canvas"></canvas>
+          </div>
+        </div>
+        <div class="field" style="margin-top:12px"><label>试算费率（%，可选）</label><input id="sd-trial" type="number" value="5" min="0" step="0.5" placeholder="用于算 ULR"></div>
+        <div class="field"><label>绑定场景（可选）</label><select id="sd-scenario">
+          <option value="">— 不绑定 —</option><option value="s1">s1 遴选/应标创新点</option><option value="s2">s2 县域特色险种立项</option>
+          <option value="s3">s3 财政补贴与农户封顶</option><option value="s4">s4 基差风险评级治理</option>
+          <option value="s5">s5 区域连片巨灾</option><option value="s6">s6 传统 vs 指数决策</option></select></div>
+        <div class="btn-row" style="margin-top:14px"><button class="btn primary" id="sd-go">生成完整方案</button>
+          <button class="btn ghost" id="sd-reset">清空</button></div>
+      </div>
+      <div class="panel">
+        <h3>方案输出（可导出 JSON / 打印）</h3>
+        <div class="ph-sub">反推方案 + 真实气象回测一键成案</div>
+        <div id="scheme-out" style="display:none"></div>
+        <div id="scheme-empty" class="scroll-note">在左侧填写设计输入后点击「生成完整方案」。可在地图上选县（自动取质心坐标与县名），或用顶部下拉选县；回测走 Open-Meteo 真实再分析气象，约数十秒。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 引擎二：方案测算费率 ========== -->
+  <section class="view" id="v-rate">
+    <div class="sec-h">引擎二 · 方案测算保险费率</div>
+    <div class="sec-sub">输入具体方案，调用 Open-Meteo 真实历史气象回测 ULR，输出 Bootstrap 费率区间与校准建议。</div>
+    <div class="preset-row">
+      <button class="preset" id="preset-jiande">示例·建德晚稻连阴雨</button>
+      <button class="preset" id="preset-gaotang">示例·高唐玉米高温</button>
+      <button class="preset" id="preset-zhoukou">示例·周口小麦晚霜冻</button>
+    </div>
+    <div class="engine-wrap">
+      <div class="panel">
+        <h3>保险方案输入</h3>
+        <div class="ph-sub">县区取真实坐标拉取历史气象</div>
+        <div class="field"><label>县区 / 市（取坐标）</label><select id="rt-city"></select></div>
+        <div class="field"><label>气象数据源</label><select id="rt-source">
+          <option value="openmeteo">Open-Meteo Archive（ERA5 再分析，默认）</option>
+          <option value="cma" disabled>国家气象科学数据中心（须密钥·预留）</option>
+          <option value="prov" disabled>省气候中心（须内网·预留）</option></select></div>
+        <div class="sec-sub" style="margin-top:12px">或直接在地图上选县（省 → 市 → 县 下钻，自动回填经纬度，替代下拉选市）</div>
+        <div class="map-wrap" style="margin-top:6px">
+          <div class="map-side">
+            <div class="field"><label>省</label><select id="rtm-prov"><option>加载中…</option></select></div>
+            <div class="field"><label>市</label><select id="rtm-city"><option>—</option></select></div>
+            <div class="field"><label>县 / 区</label><select id="rtm-county"><option>—</option></select></div>
+            <div class="map-sel">已选：<b id="rtm-sel">未选择</b></div>
+            <div class="map-coord">纬度 <span id="rtm-lat">—</span> ｜ 经度 <span id="rtm-lon">—</span></div>
+            <div class="scroll-note" id="rtm-status"></div>
+          </div>
+          <div class="map-main">
+            <div class="map-toolbar"><button class="btn ghost sm" id="rtm-back">返回上级</button></div>
+            <canvas id="rtm-canvas" class="map-canvas"></canvas>
+          </div>
+        </div>
+        <div class="row2" style="margin-bottom:10px">
+          <div class="field" style="margin:0"><label>手动纬度(覆盖)</label><input id="rt-lat" type="number" step="0.01" placeholder="如 29.47"></div>
+          <div class="field" style="margin:0"><label>手动经度(覆盖)</label><input id="rt-lon" type="number" step="0.01" placeholder="如 119.28"></div>
+        </div>
+        <div class="field"><label>作物</label><select id="rt-crop"></select></div>
+        <div class="field"><label>保险责任</label><select id="rt-peril"></select></div>
+        <div class="field"><label>方案类型</label><select id="rt-paytype">
+          <option value="step">阶梯型理赔阈值（分档查表）</option>
+          <option value="linear">线性理赔阈值（触发→封顶线性折算）</option>
+        </select></div>
+        <div class="check" style="margin:6px 0 10px"><input type="checkbox" id="rt-multi"><label for="rt-multi" style="margin:0">多责任合计（同县同作物多灾种逐年叠加封顶100%）</label></div>
+        <div id="rt-multi-box" style="display:none">
+          <div class="field"><label>次害责任</label><select id="rt-peril2"></select></div>
+          <div class="field" id="rt-ratio2-box"><label>次害阶梯赔付比例表</label><div id="rt-ratio2"></div></div>
+          <div class="field" id="rt-linear2-box" style="display:none"><label>次害线性赔付参数</label><div id="rt-linear2"></div></div>
+        </div>
+        <div class="field"><label>保险期间（月/日）</label>
+          <div class="row4">
+            <input id="rt-m1" type="number" min="1" max="12" placeholder="起月">
+            <input id="rt-d1" type="number" min="1" max="31" placeholder="起日">
+            <input id="rt-m2" type="number" min="1" max="12" placeholder="止月">
+            <input id="rt-d2" type="number" min="1" max="31" placeholder="止日">
+          </div>
+        </div>
+        <div class="field"><label>单位保额（元/亩）</label><input id="rt-sum" type="number" value="400" min="50" step="50"></div>
+        <div class="row2" style="margin-bottom:10px">
+          <div class="field" style="margin:0"><label>纯风险损失率（%，定价目标）</label><input id="rt-trial" type="number" value="5" min="0" step="0.5"></div>
+          <div class="field" style="margin:0"><label>成本比例（%，可填）</label><input id="rt-cost" type="number" value="75" min="10" max="100" step="1"></div>
+        </div>
+        <div class="field"><label>保险费率（% = 纯风险损失率 ÷ 成本比例，自动）</label><input id="rt-prerate" type="text" readonly placeholder="自动计算"></div>
+        <div class="field"><label>历史回测年数</label><select id="rt-years">
+          <option value="10">10 年</option><option value="15">15 年</option><option value="20" selected>20 年</option><option value="25">25 年</option></select></div>
+        <div class="callout" style="margin:4px 0 10px;font-size:12px">无站点近似标定（不接国家气象站时启用）：县域多格点均值 + 降水偏差校正，使方案尽量贴近站点标定结果。</div>
+        <div class="check" style="margin:2px 0 8px"><input type="checkbox" id="rt-proxy"><label for="rt-proxy" style="margin:0">启用无站点近似标定（县域多格点均值 ERA5 5 点）</label></div>
+        <div class="row2" style="margin-bottom:10px">
+          <div class="field" style="margin:0"><label>降水区域修正系数（默认1.0；长三角文献可填0.88）</label><input id="rt-pfac" type="number" step="0.01" value="1.0" min="0.5" max="1.5"></div>
+        </div>
+        <div class="field"><label>历史单产序列（可选·CSV 逐年，逗号分隔；用于指数-产量 R² 与最优阈值标定）</label>
+          <textarea id="rt-yield" rows="2" style="width:100%;font-size:12px" placeholder="如 420,435,410,460,...（与回测年序同序，旧→新）"></textarea></div>
+        <div class="field"><label>触发参数</label><div id="rt-peril-params"></div></div>
+        <div class="field" id="rt-ratio-box"><label>阶梯赔付比例表（触发阈值 → 赔付占保额比例，分档查表）</label><div id="rt-ratio"></div></div>
+        <div class="field" id="rt-linear-box" style="display:none"><label>线性赔付参数（起赔 → 全赔 连续线性折算，封顶 100%）</label><div id="rt-linear"></div></div>
+        <div class="btn-row"><button class="btn primary" id="rt-run">运行回测</button>
+          <button class="btn ghost" id="rt-reset">重置</button></div>
+        <div class="scroll-note" style="margin-top:6px">需 https/联网环境访问 archive-api.open-meteo.com。回测按年拉取真实再分析气象，约数十秒。</div>
+      </div>
+      <div class="panel">
+        <h3>费率回测结果</h3>
+        <div class="ph-sub">真实气象回测 · 非模拟</div>
+        <div id="rt-prog" style="display:none"></div>
+        <div id="rate-out" style="display:none"></div>
+        <div id="rate-empty" class="scroll-note">填入方案或点上方示例后点击「运行回测」。引擎会逐年拉取真实气象，按你的触发规则计算赔付率并 Bootstrap 出费率区间。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 选点地图（县级） ========== -->
+  <section class="view" id="v-map">
+    <div class="sec-h">县级选点地图（全国 · 合规边界）</div>
+    <div class="sec-sub">省 → 市 → 县 三级下钻选取目标县区，自动填入「方案测算费率」经纬度；亦可在地图上点击取点。边界数据：DataV.GeoAtlas（基于国家基础地理信息标准），不依赖外部瓦片底图，秒开稳定。</div>
+    <div class="map-wrap">
+      <div class="map-side">
+        <div class="field"><label>省</label><select id="mp-prov"><option>加载中…</option></select></div>
+        <div class="field"><label>市</label><select id="mp-city"><option>—</option></select></div>
+        <div class="field"><label>县 / 区</label><select id="mp-county"><option>—</option></select></div>
+        <div class="map-sel">已选：<b id="mp-sel">未选择</b></div>
+        <div class="map-coord">纬度 <span id="mp-lat">—</span> ｜ 经度 <span id="mp-lon">—</span></div>
+        <div class="btn-row">
+          <button class="btn primary" id="mp-apply">填入方案测算费率</button>
+          <button class="btn ghost" id="mp-reset">清空</button>
+        </div>
+        <div class="scroll-note" id="map-status"></div>
+        <div class="scroll-note">DataV 行政边界质心（GCJ-02）直接喂入 Open-Meteo（约 25km 网格）误差可忽略；精算报备仍须以县站观测标定。</div>
+      </div>
+      <div class="map-main">
+        <div class="map-toolbar"><button class="btn ghost sm" id="mp-back">返回上级</button></div>
+        <canvas id="pickmap" class="map-canvas"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 需求场景工作台 ========== -->
+  <section class="view" id="v-scenario">
+    <div class="sec-h">需求场景工作台</div>
+    <div class="sec-sub">把工具嵌进阳光财险农险合伙人的真实业务动作。点场景卡片：遴选/特色立项会预填并反推方案；财政封顶/基差评级/区域巨灾/决策对照直接打开测算器。</div>
+    <div class="scenario-cards" id="scenario-cards"></div>
+    <div class="sc-stage" id="sc-stage"></div>
+  </section>
+
+  <!-- ========== 方法论 ========== -->
+  <section class="view" id="v-method">
+    <div class="sec-h">天气指数保险设计方法论（9 步流水线）</div>
+    <div class="sec-sub">源自气象指数保险设计器方法论与农险专家包 04/05/09/10 库；纯气象指数导向，基差靠农时物候匹配治理。</div>
+    <div class="callout">纯天气指数边界（刚性）：本品不采用产量/遥感双触发赔付条件，遥感仅作设计期校验/校准与对农户、监管的直观佐证。核心敌人是基差风险，治理主轴是农时物候精准匹配。</div>
+    <div id="method-steps"></div>
+    <div class="sec-h" style="margin-top:24px">灾害 → 指数 → 阈值方向 速查</div>
+    <div class="res-block" style="background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px">
+      <div class="rb-b"><table class="mini" id="method-quick"><tr><th>灾害</th><th>推荐指数</th><th>基准变量</th><th>阈值方向</th><th>卡点窗口</th></tr></table></div>
+    </div>
+    <div class="sec-h" style="margin-top:24px">政策合规锚定</div>
+    <div class="res-block" style="background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px">
+      <div class="rb-b">金发〔2024〕35号（双精准）/ 银保监规〔2023〕4号（精算规定）/ 银保监规〔2022〕4号（承保理赔办法）/ JR/T 0180-2019 / T/IAC CARMS 55—2025（起草单位为阳光农互，非阳光产险）。费率与阈值以【】占位，待试点县历史数据标定 + 监管批复；对外材料不夸大收益、不暗示"无灾返保费"等违规表述。</div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <b>向阳社 · 天气指数保险设计平台</b>（内部设计辅助工具，测试版）。数据来源：Open-Meteo Archive（ERA5/NOAA GFS 再分析，真实可溯源）、阳光产险农险专家包 04/05/09/10 库、公开行业案例。<br>
+    本平台为<b>设计辅助</b>，所有费率/阈值以【】占位，最终以试点县历史气象数据标定、精算报备与监管批复为准；不构成任何承保或理赔承诺。主体区分：阳光财产保险股份有限公司 ≠ 阳光农业相互保险公司。
+  </footer>
+
+</div>
+
+<!-- 脚本：知识库 → 引擎一/二 → 主控 -->
+<script src="assets/js/knowledge.js"></script>
+<script src="assets/js/engine-reverse.js"></script>
+<script src="assets/js/calibrate.js"></script>
+<script src="assets/js/engine-rate.js"></script>
+<script src="assets/js/map.js"></script>
+<script src="assets/js/engine-scenario.js"></script>
+<script src="assets/js/engine-scheme.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>
